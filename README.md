@@ -1,17 +1,13 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+<img width="1782" alt="Screenshot 2024-04-02 at 8 27 22 PM" src="https://github.com/Chensokheng/newsletter/assets/52232579/7d74c6ed-bf97-4cf8-9e4f-40d5dff2a75a">
+
+# Personal Newsletter with Next.js + Supabase 📩
 
 First, run the development server:
 
 ```bash
+npm i 
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
