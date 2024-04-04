@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { createClientBroswer } from "@/lib/supabase/browser";
 
 const FormSchema = z
 	.object({
@@ -41,8 +42,17 @@ export default function FormSubscription() {
 		},
 	});
 
-	function onSubmit(data: z.infer<typeof FormSchema>) {
-		toast.success("Please check your inbox");
+	async function onSubmit(data: z.infer<typeof FormSchema>) {
+		const supabase = createClientBroswer();
+		const { error } = await supabase.auth.signInWithOtp({
+			email: data.email,
+			options: {
+				emailRedirectTo: process.env.NEXT_PUBLIC_SITE_URL + "/thank",
+			},
+		});
+		if (!error) {
+			toast.success("Please check your inbox");
+		}
 	}
 
 	return (

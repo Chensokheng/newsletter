@@ -1,6 +1,7 @@
+import { LinearLoginCodeEmail } from "@/emails";
 import supabaseAdmin from "@/lib/supabase/admin";
-import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import { Resend } from "resend";
 
 export async function POST(req: Request) {
 	const { email } = (await req.json()) as { email: string };
@@ -41,8 +42,14 @@ export async function POST(req: Request) {
 	}
 
 	// send email to user
-
-	return Response.json({ data });
+	const verifyLink = data.properties.action_link;
+	console.log(verifyLink);
+	try {
+		const emailRes = await sendMail(verifyLink, email);
+		return Response.json({ message: "Please check your inbox", emailRes });
+	} catch (error) {
+		return Response.json({ message: "Fail to send email" });
+	}
 }
 
 async function generateMagicLink(email: string) {
@@ -51,7 +58,17 @@ async function generateMagicLink(email: string) {
 		type: "magiclink",
 		email: email,
 		options: {
-			redirectTo: "http://localhost:3000",
+			redirectTo: "http://localhost:3000/thank",
 		},
+	});
+}
+
+async function sendMail(verifyLink: string, email: string) {
+	const resend = new Resend(process.env.RESEND_KEY);
+	return await resend.emails.send({
+		from: "Acme <noreply@daertam.com>",
+		to: [email],
+		subject: "Confirm Subscription",
+		react: LinearLoginCodeEmail({ verifyLink }),
 	});
 }
