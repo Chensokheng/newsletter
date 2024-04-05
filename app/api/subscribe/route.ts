@@ -7,6 +7,7 @@ export async function POST(req: Request) {
 	// TODO: Rate limit
 
 	const { email } = (await req.json()) as { email: string };
+
 	if (!email) {
 		return NextResponse.json(
 			{
@@ -51,7 +52,14 @@ export async function POST(req: Request) {
 	const emailRes = await sendMail(verifyLink, email);
 
 	if (emailRes.error) {
-		return Response.json({ message: "Fail to send email" });
+		return NextResponse.json(
+			{
+				message: "Fail to send email",
+			},
+			{
+				status: 400,
+			}
+		);
 	} else {
 		return Response.json({ message: "Please check your inbox" });
 	}
@@ -68,7 +76,7 @@ async function generateMagicLink(email: string) {
 async function sendMail(verifyLink: string, email: string) {
 	const resend = new Resend(process.env.RESEND_KEY);
 	return await resend.emails.send({
-		from: "Acme <noreply@daertam.com>",
+		from: "noreply@daertam.com",
 		to: [email],
 		subject: "Confirm Subscription",
 		react: LinearLoginCodeEmail({ verifyLink }),

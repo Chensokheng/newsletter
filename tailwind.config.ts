@@ -74,8 +74,19 @@ const config = {
 					from: { height: "var(--radix-accordion-content-height)" },
 					to: { height: "0" },
 				},
+				"move-up": {
+					from: {
+						transform: "translateY(10px)",
+						opacity: "0",
+					},
+					to: {
+						trasnform: "translateY(0px)",
+						opacity: "1",
+					},
+				},
 			},
 			animation: {
+				"move-up": "move-up 1s linear forwards",
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
 			},

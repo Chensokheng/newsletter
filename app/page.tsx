@@ -3,11 +3,9 @@ import React from "react";
 
 export default function page() {
 	return (
-		<div className=" relative h-screen w-full flex items-center justify-center dark:bg-grid-white/[0.05] ">
-			<div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
-
-			<div className="text-center space-y-5">
-				<h1 className="text-6xl font-black">
+		<div className=" relative h-screen w-full flex items-center justify-center  ">
+			<div className="text-center space-y-5 animate-move-up">
+				<h1 className="text-6xl font-black ">
 					Join Our{" "}
 					<span className=" text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
 						Newsletter

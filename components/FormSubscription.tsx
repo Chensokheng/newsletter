@@ -14,7 +14,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { createClientBroswer } from "@/lib/supabase/browser";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 const FormSchema = z
 	.object({
@@ -35,6 +36,7 @@ const FormSchema = z
 	);
 
 export default function FormSubscription() {
+	const [isLoading, setLoading] = useState(false);
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
@@ -42,17 +44,27 @@ export default function FormSubscription() {
 		},
 	});
 
-	async function onSubmit(data: z.infer<typeof FormSchema>) {
-		const supabase = createClientBroswer();
-		const { error } = await supabase.auth.signInWithOtp({
-			email: data.email,
-			options: {
-				emailRedirectTo: process.env.NEXT_PUBLIC_SITE_URL + "/thank",
+	const subscribe = async (email: string) => {
+		const res = await fetch("/api/subscribe", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
 			},
+			body: JSON.stringify({ email }),
 		});
-		if (!error) {
+		if (res.status !== 200) {
+			const data = await res.json();
+			toast.error(data.message);
+		} else {
 			toast.success("Please check your inbox");
+			form.reset();
 		}
+	};
+
+	async function onSubmit(data: z.infer<typeof FormSchema>) {
+		setLoading(true);
+		await subscribe(data.email);
+		setLoading(false);
 	}
 
 	return (
@@ -66,10 +78,14 @@ export default function FormSubscription() {
 							<FormControl>
 								<Input
 									{...field}
+									disabled={isLoading}
 									type="email"
 									autoFocus={true}
 									placeholder="email@gmail.com"
-									className=" h-14 text-lg text-center bg-white dark:bg-zinc-900"
+									className={cn(
+										" h-14 text-lg text-center bg-white dark:bg-zinc-900 ",
+										{ "animate-pulse": isLoading }
+									)}
 									onKeyDown={(e) => {
 										if (e.key === "Enter") {
 											document
