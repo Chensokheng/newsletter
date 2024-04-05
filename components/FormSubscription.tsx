@@ -67,8 +67,9 @@ export default function FormSubscription() {
 								<Input
 									{...field}
 									type="email"
+									autoFocus={true}
 									placeholder="email@gmail.com"
-									className=" h-14 text-lg text-center bg-zinc-900"
+									className=" h-14 text-lg text-center bg-white dark:bg-zinc-900"
 									onKeyDown={(e) => {
 										if (e.key === "Enter") {
 											document

@@ -53,7 +53,6 @@ export async function updateSession(request: NextRequest) {
 			},
 		}
 	);
-	const { data } = await supabase.auth.getUser();
-	console.log(data);
+	await supabase.auth.getUser();
 	return response;
 }

@@ -21,11 +21,12 @@ export default function RootLayout({
 			<body className={bricolageGrotesque.className}>
 				<ThemeProvider
 					attribute="class"
-					defaultTheme="dark"
+					defaultTheme="light"
 					enableSystem
 					disableTransitionOnChange
 				>
 					{children}
+
 					<Toaster richColors />
 				</ThemeProvider>
 			</body>

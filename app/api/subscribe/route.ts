@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
 export async function POST(req: Request) {
+	// TODO: Rate limit
+
 	const { email } = (await req.json()) as { email: string };
 	if (!email) {
 		return NextResponse.json(
@@ -27,8 +29,8 @@ export async function POST(req: Request) {
 			}
 		);
 	}
-	// check if email is already exist
-	// gernate magiclink
+	//TODO: check if email is already exist
+
 	const { data, error } = await generateMagicLink(email);
 	if (error) {
 		return NextResponse.json(
@@ -41,14 +43,17 @@ export async function POST(req: Request) {
 		);
 	}
 
-	// send email to user
-	const verifyLink = data.properties.action_link;
-	console.log(verifyLink);
-	try {
-		const emailRes = await sendMail(verifyLink, email);
-		return Response.json({ message: "Please check your inbox", emailRes });
-	} catch (error) {
+	const token_hash = data.properties.hashed_token;
+	const verifyLink =
+		process.env.NEXT_PUBLIC_SITE_URL +
+		`/auth/confirm?token_hash=${token_hash}&type=magiclink&next=/thank`;
+
+	const emailRes = await sendMail(verifyLink, email);
+
+	if (emailRes.error) {
 		return Response.json({ message: "Fail to send email" });
+	} else {
+		return Response.json({ message: "Please check your inbox" });
 	}
 }
 
@@ -57,9 +62,6 @@ async function generateMagicLink(email: string) {
 	return await supabase.auth.admin.generateLink({
 		type: "magiclink",
 		email: email,
-		options: {
-			redirectTo: "http://localhost:3000/thank",
-		},
 	});
 }
 

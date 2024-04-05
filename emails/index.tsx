@@ -41,7 +41,7 @@ export const LinearLoginCodeEmail = ({
 					{"Confirm Subscribe to DailyWebCoding's Newsletter"}
 				</Text>
 				<Text style={paragraph}>👇 click on this</Text>
-				<Link href="verifyLink" style={button}>
+				<Link href={verifyLink} style={button}>
 					Confirm
 				</Link>
 				<Text>
