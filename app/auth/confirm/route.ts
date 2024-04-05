@@ -36,6 +36,10 @@ export async function GET(request: NextRequest) {
 			type,
 			token_hash,
 		});
+		if (error?.code === "otp_expired") {
+			return NextResponse.redirect(`${origin}/expired`);
+		}
+
 		if (!error) {
 			const { error: errInsert } = await supabaseAdmin
 				.from("email_list")
