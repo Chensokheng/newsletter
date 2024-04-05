@@ -31,6 +31,21 @@ export async function POST(req: Request) {
 		);
 	}
 	//TODO: check if email is already exist
+	const { data: existEmail } = await supabaseAdmin
+		.from("email_list")
+		.select("email")
+		.eq("email", email)
+		.single();
+	if (existEmail) {
+		return NextResponse.json(
+			{
+				message: "Email is already subscribed.",
+			},
+			{
+				status: 400,
+			}
+		);
+	}
 
 	const { data, error } = await generateMagicLink(email);
 	if (error) {
