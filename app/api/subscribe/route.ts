@@ -42,26 +42,26 @@ export async function POST(req: Request) {
 				status: 400,
 			}
 		);
-	}
-
-	const token_hash = data.properties.hashed_token;
-	const verifyLink =
-		process.env.NEXT_PUBLIC_SITE_URL +
-		`/auth/confirm?token_hash=${token_hash}&type=magiclink&next=/thank`;
-
-	const emailRes = await sendMail(verifyLink, email);
-
-	if (emailRes.error) {
-		return NextResponse.json(
-			{
-				message: "Fail to send email",
-			},
-			{
-				status: 400,
-			}
-		);
 	} else {
-		return Response.json({ message: "Please check your inbox" });
+		const token_hash = data.properties.hashed_token;
+		const verifyLink =
+			process.env.NEXT_PUBLIC_SITE_URL +
+			`/auth/confirm?token_hash=${token_hash}&type=magiclink&next=/thank&email=${email}&id=${data.user.id}`;
+
+		const emailRes = await sendMail(verifyLink, email);
+
+		if (emailRes.error) {
+			return NextResponse.json(
+				{
+					message: "Fail to send email",
+				},
+				{
+					status: 400,
+				}
+			);
+		} else {
+			return Response.json({ message: "Please check your inbox" });
+		}
 	}
 }
 

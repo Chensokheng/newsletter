@@ -52,18 +52,33 @@ export default function FormSubscription() {
 			},
 			body: JSON.stringify({ email }),
 		});
+		const data = await res.json();
+
 		if (res.status !== 200) {
-			const data = await res.json();
-			toast.error(data.message);
+			throw data.message || "Fail to send email";
 		} else {
-			toast.success("Please check your inbox");
 			form.reset();
+			return data.message || "Please check your inbox";
 		}
 	};
 
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
 		setLoading(true);
-		await subscribe(data.email);
+		toast.promise(() => subscribe(data.email), {
+			loading: "Sending Confirmation Email...",
+			success: (data) => {
+				return `${data}`;
+			},
+			error: (err) => {
+				console.log(err);
+				return err;
+			},
+			duration: Infinity,
+			action: {
+				label: "Close",
+				onClick: () => {},
+			},
+		});
 		setLoading(false);
 	}
 
