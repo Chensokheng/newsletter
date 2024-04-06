@@ -55,30 +55,19 @@ export default function FormSubscription() {
 		const data = await res.json();
 
 		if (res.status !== 200) {
-			throw data.message || "Fail to send email";
+			toast.dismiss("sending");
+			toast.error(data.message);
 		} else {
 			form.reset();
-			return data.message || "Please check your inbox";
+			toast.dismiss("sending");
+			toast.success(data.message);
 		}
 	};
 
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
 		setLoading(true);
-		toast.promise(() => subscribe(data.email), {
-			loading: "Sending Confirmation Email...",
-			success: (data) => {
-				return `${data}`;
-			},
-			error: (err) => {
-				console.log(err);
-				return err;
-			},
-			duration: Infinity,
-			action: {
-				label: "Close",
-				onClick: () => {},
-			},
-		});
+		toast.loading("Sending Email...", { id: "sending" });
+		await subscribe(data.email);
 		setLoading(false);
 	}
 

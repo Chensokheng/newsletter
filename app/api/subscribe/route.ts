@@ -5,6 +5,7 @@ import { Resend } from "resend";
 
 export async function POST(req: Request) {
 	// TODO: Rate limit
+	const { origin } = new URL(req.url);
 
 	const { email } = (await req.json()) as { email: string };
 
@@ -60,7 +61,7 @@ export async function POST(req: Request) {
 	} else {
 		const token_hash = data.properties.hashed_token;
 		const verifyLink =
-			process.env.NEXT_PUBLIC_SITE_URL +
+			origin +
 			`/auth/confirm?token_hash=${token_hash}&type=magiclink&next=/thank&email=${email}&id=${data.user.id}`;
 
 		const emailRes = await sendMail(verifyLink, email);
