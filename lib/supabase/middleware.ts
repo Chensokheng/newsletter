@@ -53,6 +53,14 @@ export async function updateSession(request: NextRequest) {
 			},
 		}
 	);
-	await supabase.auth.getUser();
+	const { pathname } = request.nextUrl;
+	const { data } = await supabase.auth.getUser();
+
+	if (pathname.startsWith("/dashboard") && !data.user) {
+		return NextResponse.redirect(new URL("/", request.url));
+	} else if (data.user?.user_metadata?.role === "admin") {
+		return response;
+	}
+
 	return response;
 }

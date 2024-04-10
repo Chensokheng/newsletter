@@ -60,7 +60,7 @@ export const ConfirmSubscription = ({
 
 ConfirmSubscription.PreviewProps = {
 	verifyLink: "http://localhost:3000",
-} as LinearLoginCodeEmailProps;
+} as ConfirmSubscriptionProps;
 
 export default ConfirmSubscription;
 
