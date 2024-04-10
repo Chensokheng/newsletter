@@ -3,7 +3,7 @@ import React from "react";
 
 export default function page() {
 	return (
-		<div className=" relative h-screen w-full flex items-center justify-center  ">
+		<div className=" relative h-full w-full flex items-center justify-center  ">
 			<div className="text-center space-y-5 animate-move-up">
 				<h1 className="text-6xl font-black ">
 					Join Our{" "}

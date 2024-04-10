@@ -1,6 +1,6 @@
 export default function Page() {
 	return (
-		<div className="flex items-center justify-center w-full h-screen text-center">
+		<div className="flex items-center justify-center w-full h-full text-center">
 			<div className="space-y-5">
 				<h1 className="text-6xl font-black animate-move-up">
 					Thank you for{" "}
