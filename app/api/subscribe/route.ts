@@ -1,4 +1,4 @@
-import { LinearLoginCodeEmail } from "@/emails";
+import { ConfirmSubscription } from "@/emails";
 import supabaseAdmin from "@/lib/supabase/admin";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
@@ -31,7 +31,6 @@ export async function POST(req: Request) {
 			}
 		);
 	}
-	//TODO: check if email is already exist
 	const { data: existEmail } = await supabaseAdmin
 		.from("email_list")
 		.select("email")
@@ -48,7 +47,7 @@ export async function POST(req: Request) {
 		);
 	}
 
-	const { data, error } = await generateMagicLink(email);
+	const { data, error } = await generateMagicLink(email, origin);
 	if (error) {
 		return NextResponse.json(
 			{
@@ -59,12 +58,7 @@ export async function POST(req: Request) {
 			}
 		);
 	} else {
-		const token_hash = data.properties.hashed_token;
-		const verifyLink =
-			origin +
-			`/auth/confirm?token_hash=${token_hash}&type=magiclink&next=/thank&email=${email}&id=${data.user.id}`;
-
-		const emailRes = await sendMail(verifyLink, email);
+		const emailRes = await sendMail(data.properties.action_link, email);
 
 		if (emailRes.error) {
 			return NextResponse.json(
@@ -81,11 +75,14 @@ export async function POST(req: Request) {
 	}
 }
 
-async function generateMagicLink(email: string) {
+async function generateMagicLink(email: string, origin: string) {
 	const supabase = supabaseAdmin;
 	return await supabase.auth.admin.generateLink({
 		type: "magiclink",
 		email: email,
+		options: {
+			redirectTo: origin + "/check",
+		},
 	});
 }
 
@@ -95,6 +92,6 @@ async function sendMail(verifyLink: string, email: string) {
 		from: "noreply@daertam.com",
 		to: [email],
 		subject: "Confirm Subscription",
-		react: LinearLoginCodeEmail({ verifyLink }),
+		react: ConfirmSubscription({ verifyLink }),
 	});
 }

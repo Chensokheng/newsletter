@@ -1,9 +1,7 @@
 import {
 	Body,
-	Button,
 	Container,
 	Head,
-	Heading,
 	Hr,
 	Html,
 	Img,
@@ -14,17 +12,13 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-interface LinearLoginCodeEmailProps {
+interface ConfirmSubscriptionProps {
 	verifyLink: string;
 }
 
-const baseUrl = process.env.VERCEL_URL
-	? `https://${process.env.VERCEL_URL}`
-	: "";
-
-export const LinearLoginCodeEmail = ({
+export const ConfirmSubscription = ({
 	verifyLink,
-}: LinearLoginCodeEmailProps) => (
+}: ConfirmSubscriptionProps) => (
 	<Html>
 		<Head />
 		<Preview>DailyWebCoding-Newsletter Confirmation</Preview>
@@ -64,11 +58,11 @@ export const LinearLoginCodeEmail = ({
 	</Html>
 );
 
-LinearLoginCodeEmail.PreviewProps = {
+ConfirmSubscription.PreviewProps = {
 	verifyLink: "http://localhost:3000",
 } as LinearLoginCodeEmailProps;
 
-export default LinearLoginCodeEmail;
+export default ConfirmSubscription;
 
 const logo = {
 	borderRadius: 21,
