@@ -56,10 +56,16 @@ export async function updateSession(request: NextRequest) {
 	const { pathname } = request.nextUrl;
 	const { data } = await supabase.auth.getUser();
 
-	if (pathname.startsWith("/dashboard") && !data.user) {
-		return NextResponse.redirect(new URL("/", request.url));
-	} else if (data.user?.user_metadata?.role === "admin") {
-		return response;
+	if (pathname.startsWith("/dashboard")) {
+		if (!data.user) {
+			return NextResponse.redirect(new URL("/", request.url));
+		} else if (data.user?.user_metadata?.role === "admin") {
+			return response;
+		}
+	}
+
+	if (pathname.startsWith("/auth") && data.user) {
+		return NextResponse.redirect(new URL("/dashboard", request.url));
 	}
 
 	return response;

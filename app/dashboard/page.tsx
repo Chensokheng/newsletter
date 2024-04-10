@@ -1,14 +1,9 @@
 import React from "react";
-import AuthComponent from "./components/AuthComponent";
-import { createClientServer } from "@/lib/supabase/server";
 
-export default async function page() {
-	const supabase = createClientServer();
-	const { data } = await supabase.auth.getUser();
-
+export default function page() {
 	return (
 		<div>
-			{data.user ? <h1>Welcome to Dashboard</h1> : <AuthComponent />}
+			<h1>This is Dashboard</h1>
 		</div>
 	);
 }
