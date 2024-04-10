@@ -1,76 +1,103 @@
 import { ConfirmSubscription } from "@/emails";
 import supabaseAdmin from "@/lib/supabase/admin";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import { Ratelimit } from "@upstash/ratelimit";
 
-export async function POST(req: Request) {
-	// TODO: Rate limit
-	const { origin } = new URL(req.url);
+import { kv } from "@vercel/kv";
 
-	const { email } = (await req.json()) as { email: string };
+const ratelimit = new Ratelimit({
+	redis: kv,
+	limiter: Ratelimit.slidingWindow(3, "86400s"),
+});
 
-	if (!email) {
-		return NextResponse.json(
-			{
-				message: "Email is required.",
-			},
-			{
-				status: 422,
-			}
-		);
-	} else if (
-		!email.endsWith("@gmail.com") &&
-		!email.endsWith("@outlook.com")
-	) {
-		return NextResponse.json(
-			{
-				message: "Support only @gmail,@outlook",
-			},
-			{
-				status: 400,
-			}
-		);
-	}
-	const { data: existEmail } = await supabaseAdmin
-		.from("email_list")
-		.select("email")
-		.eq("email", email)
-		.single();
-	if (existEmail) {
-		return NextResponse.json(
-			{
-				message: "Email is already subscribed.",
-			},
-			{
-				status: 400,
-			}
-		);
-	}
+export const runtime = "edge";
 
-	const { data, error } = await generateMagicLink(email, origin);
-	if (error) {
-		return NextResponse.json(
+export async function POST(req: NextRequest) {
+	const ip = req.ip ?? "127.0.0.1";
+	const { remaining } = await ratelimit.limit(ip);
+
+	if (remaining === 0) {
+		return new Response(
+			JSON.stringify({
+				message:
+					"You are requesting too much. Please check your email inbox",
+			}),
 			{
-				message: error.message,
-			},
-			{
-				status: 400,
+				status: 409,
+				headers: {
+					"X-RateLimit-Remaining": remaining.toString(),
+				},
 			}
 		);
 	} else {
-		const emailRes = await sendMail(data.properties.action_link, email);
+		const { origin } = new URL(req.url);
 
-		if (emailRes.error) {
+		const { email } = (await req.json()) as { email: string };
+
+		if (!email) {
 			return NextResponse.json(
 				{
-					message: "Fail to send email",
+					message: "Email is required.",
+				},
+				{
+					status: 422,
+				}
+			);
+		} else if (
+			!email.endsWith("@gmail.com") &&
+			!email.endsWith("@outlook.com")
+		) {
+			return NextResponse.json(
+				{
+					message: "Support only @gmail,@outlook",
+				},
+				{
+					status: 400,
+				}
+			);
+		}
+		const { data: existEmail } = await supabaseAdmin
+			.from("email_list")
+			.select("email")
+			.eq("email", email)
+			.single();
+		if (existEmail) {
+			return NextResponse.json(
+				{
+					message: "Email is already subscribed.",
+				},
+				{
+					status: 400,
+				}
+			);
+		}
+
+		const { data, error } = await generateMagicLink(email, origin);
+		if (error) {
+			return NextResponse.json(
+				{
+					message: error.message,
 				},
 				{
 					status: 400,
 				}
 			);
 		} else {
-			return Response.json({ message: "Please check your inbox" });
+			const emailRes = await sendMail(data.properties.action_link, email);
+
+			if (emailRes.error) {
+				return NextResponse.json(
+					{
+						message: "Fail to send email",
+					},
+					{
+						status: 400,
+					}
+				);
+			} else {
+				return Response.json({ message: "Please check your inbox" });
+			}
 		}
 	}
 }
