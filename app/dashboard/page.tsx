@@ -1,5 +1,6 @@
 import React from "react";
 import Analytic from "./components/Analytic";
+import TotalEmail from "./components/TotalEmail";
 
 export default function page() {
 	return (
@@ -7,8 +8,8 @@ export default function page() {
 			<h1 className="text-3xl font-black">Overview 📈</h1>
 
 			<div className="h-96 border rounded-md p-5 dark:bg-[#111]">
-				<h1 className="">Total Emails 📨</h1>
-				<h1 className="text-4xl font-semibold">100</h1>
+				<TotalEmail />
+
 				<Analytic />
 			</div>
 			<div className=" ">

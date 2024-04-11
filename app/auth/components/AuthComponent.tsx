@@ -73,7 +73,7 @@ export function AuthForm() {
 									placeholder="email"
 									{...field}
 									type="email"
-									className="h-14 text-lg"
+									className="h-14 text-lg bg-white dark:bg-zinc-900"
 								/>
 							</FormControl>
 							<FormMessage />
@@ -90,7 +90,7 @@ export function AuthForm() {
 									placeholder="password"
 									{...field}
 									type="password"
-									className="h-14 text-lg"
+									className="h-14 text-lg bg-white dark:bg-zinc-900"
 								/>
 							</FormControl>
 							<FormMessage />

@@ -18,5 +18,5 @@ export default function Page() {
 		// eslint-disable-next-line
 	}, []);
 
-	return <></>;
+	return <div className="h-full"></div>;
 }
