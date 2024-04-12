@@ -43,6 +43,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_email_chart_data: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          truncated_date: string
+          count: number
+        }[]
+      }
       is_admin: {
         Args: Record<PropertyKey, never>
         Returns: boolean

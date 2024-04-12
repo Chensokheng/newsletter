@@ -1,6 +1,7 @@
 import React from "react";
 import Analytic from "./components/Analytic";
 import TotalEmail from "./components/TotalEmail";
+import AnalyticWrapper from "./components/AnalyticWrapper";
 
 export default function page() {
 	return (
@@ -10,7 +11,7 @@ export default function page() {
 			<div className="h-96 border rounded-md p-5 dark:bg-[#111]">
 				<TotalEmail />
 
-				<Analytic />
+				<AnalyticWrapper />
 			</div>
 			<div className=" ">
 				<h1 className="text-3xl font-bold">Send Project Challenge</h1>

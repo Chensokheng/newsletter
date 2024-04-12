@@ -20,7 +20,13 @@ ChartJS.register(
 	Legend
 );
 
-export default function Analytic() {
+export default function Analytic({
+	data,
+}: {
+	data: {
+		[key: string]: number;
+	};
+}) {
 	return (
 		<>
 			<div className="w-full h-64">
@@ -77,16 +83,17 @@ export default function Analytic() {
 						},
 					}}
 					data={{
-						labels: Array.from(
-							{ length: 30 },
-							(_, index) => index + 1
-						),
+						labels: Object.keys(data).map((dateString) => {
+							const date = new Date(dateString);
+							const formattedDate = date.toLocaleDateString(
+								"en-US",
+								{ month: "short", day: "2-digit" }
+							);
+							return formattedDate;
+						}),
 						datasets: [
 							{
-								data: [
-									1, 2, 4, 1, 10, 20, 1, 5, 6, 8, 1, 30, 100,
-									50, 5, 61,
-								],
+								data: Object.keys(data).map((key) => data[key]),
 								borderWidth: 1,
 								borderRadius: 9,
 								backgroundColor: (ctx, options) => {
