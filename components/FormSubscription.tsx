@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 const FormSchema = z
 	.object({
@@ -36,6 +37,7 @@ const FormSchema = z
 	);
 
 export default function FormSubscription() {
+	const router = useRouter();
 	const [isLoading, setLoading] = useState(false);
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
@@ -60,7 +62,7 @@ export default function FormSubscription() {
 		} else {
 			form.reset();
 			toast.dismiss("sending");
-			toast.success(data.message);
+			router.push("/verify");
 		}
 	};
 

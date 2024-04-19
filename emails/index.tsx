@@ -98,10 +98,6 @@ const paragraph = {
 	color: "#3c4149",
 };
 
-const buttonContainer = {
-	backgroundColor: "#5e6ad2",
-};
-
 const button = {
 	backgroundColor: "#5e6ad2",
 	borderRadius: "3px",

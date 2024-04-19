@@ -7,7 +7,6 @@ export default function Page() {
 
 	useEffect(() => {
 		const hashValue = window.location.hash;
-		console.log(hashValue);
 		if (hashValue.startsWith("#error") && hashValue.endsWith("expired")) {
 			router.replace("/expired");
 		} else if (hashValue.startsWith("#error")) {
