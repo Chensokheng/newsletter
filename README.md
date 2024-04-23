@@ -1,4 +1,3 @@
-
 <img width="1782" alt="Screenshot 2024-04-02 at 8 27 22 PM" src="https://github.com/Chensokheng/newsletter/assets/52232579/7d74c6ed-bf97-4cf8-9e4f-40d5dff2a75a">
 
 # Personal Newsletter with Next.js + Supabase 📩
@@ -6,7 +5,7 @@
 First, run the development server:
 
 ```bash
-npm i 
+npm i
 npm run dev
 ```
 
@@ -20,8 +19,8 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+-   [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+-   [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
